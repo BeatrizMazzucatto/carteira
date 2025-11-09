@@ -547,9 +547,13 @@ public class ConsoleApplication implements CommandLineRunner {
             for (int i = 0; i < carteiras.size(); i++) {
                 System.out.println((i + 1) + ". " + carteiras.get(i).getNome());
             }
+            System.out.println("0. Voltar");
             System.out.print("Opção: ");
 
             int carteiraOpcao = lerInteiro();
+            if (carteiraOpcao == 0) {
+                return;
+            }
             if (carteiraOpcao < 1 || carteiraOpcao > carteiras.size()) {
                 System.out.println("Carteira inválida!");
                 return;
@@ -576,9 +580,13 @@ public class ConsoleApplication implements CommandLineRunner {
         System.out.println("1. Compra");
         System.out.println("2. Venda");
         System.out.println("3. Provento/Dividendo");
+        System.out.println("0. Voltar");
         System.out.print("Opção: ");
 
         int tipoOpcao = lerInteiro();
+        if (tipoOpcao == 0) {
+            return;
+        }
         com.invest.model.TipoTransacao tipoTransacao = obterTipoTransacao(tipoOpcao);
 
         // Se for compra, mostra lista de ações disponíveis do JSON
@@ -587,11 +595,17 @@ public class ConsoleApplication implements CommandLineRunner {
             return;
         }
 
-        System.out.print("Código do ativo (ex: PETR4): ");
+        System.out.print("Código do ativo (ex: PETR4) ou 0 para voltar: ");
         String codigoAtivo = scanner.nextLine().trim().toUpperCase();
+        if (codigoAtivo.equals("0")) {
+            return;
+        }
 
-        System.out.print("Nome do ativo (ex: Petrobras): ");
+        System.out.print("Nome do ativo (ex: Petrobras) ou 0 para voltar: ");
         String nomeAtivo = scanner.nextLine().trim();
+        if (nomeAtivo.equals("0")) {
+            return;
+        }
 
         System.out.println();
         System.out.println("Tipo do ativo:");
@@ -602,16 +616,38 @@ public class ConsoleApplication implements CommandLineRunner {
         System.out.println("5. LCI/LCA");
         System.out.println("6. Tesouro");
         System.out.println("7. Criptomoeda");
+        System.out.println("0. Voltar");
         System.out.print("Opção: ");
 
         int ativoOpcao = lerInteiro();
+        if (ativoOpcao == 0) {
+            return;
+        }
         com.invest.model.TipoAtivo tipoAtivo = obterTipoAtivo(ativoOpcao);
 
-        System.out.print("Quantidade: ");
+        System.out.print("Quantidade (ou 0 para voltar): ");
         BigDecimal quantidade = lerDecimal();
+        if (quantidade.compareTo(BigDecimal.ZERO) <= 0) {
+            if (quantidade.compareTo(BigDecimal.ZERO) == 0) {
+                System.out.println("Operação cancelada.");
+                return;
+            } else {
+                System.out.println("Quantidade deve ser positiva!");
+                return;
+            }
+        }
 
-        System.out.print("Preço unitário (R$): ");
+        System.out.print("Preço unitário (R$) ou 0 para voltar: ");
         BigDecimal precoUnitario = lerDecimal();
+        if (precoUnitario.compareTo(BigDecimal.ZERO) <= 0) {
+            if (precoUnitario.compareTo(BigDecimal.ZERO) == 0) {
+                System.out.println("Operação cancelada.");
+                return;
+            } else {
+                System.out.println("Preço deve ser positivo!");
+                return;
+            }
+        }
 
         // Calcula taxas automaticamente (0,5% do valor total da transação)
         BigDecimal valorTotal = quantidade.multiply(precoUnitario);
@@ -712,20 +748,41 @@ public class ConsoleApplication implements CommandLineRunner {
             System.out.println("Escolha o tipo de compra:");
             System.out.println("1. Comprar por quantidade de ações");
             System.out.println("2. Comprar por valor total (R$)");
+            System.out.println("0. Voltar");
             System.out.print("Opção: ");
 
             int tipoCompraOpcao = lerInteiro();
+            if (tipoCompraOpcao == 0) {
+                return;
+            }
+            
             BigDecimal quantidade;
             BigDecimal precoUnitario = precoAtual;
 
             if (tipoCompraOpcao == 1) {
                 // Compra por quantidade
-                System.out.print("Quantidade de ações: ");
+                System.out.print("Quantidade de ações (ou 0 para voltar): ");
                 quantidade = lerDecimal();
+                if (quantidade.compareTo(BigDecimal.ZERO) <= 0) {
+                    if (quantidade.compareTo(BigDecimal.ZERO) == 0) {
+                        return;
+                    } else {
+                        System.out.println("Quantidade deve ser positiva!");
+                        return;
+                    }
+                }
             } else if (tipoCompraOpcao == 2) {
                 // Compra por valor total
-                System.out.print("Valor total a investir (R$): ");
+                System.out.print("Valor total a investir (R$) ou 0 para voltar: ");
                 BigDecimal valorTotal = lerDecimal();
+                if (valorTotal.compareTo(BigDecimal.ZERO) <= 0) {
+                    if (valorTotal.compareTo(BigDecimal.ZERO) == 0) {
+                        return;
+                    } else {
+                        System.out.println("Valor deve ser positivo!");
+                        return;
+                    }
+                }
                 quantidade = valorTotal.divide(precoAtual, 4, java.math.RoundingMode.HALF_UP);
                 System.out.println("Quantidade calculada: " + formatarQuantidade(quantidade));
             } else {
@@ -919,9 +976,13 @@ public class ConsoleApplication implements CommandLineRunner {
             for (int i = 0; i < carteiras.size(); i++) {
                 System.out.println((i + 1) + ". " + carteiras.get(i).getNome());
             }
+            System.out.println("0. Voltar");
             System.out.print("Opção: ");
 
             int opcao = lerInteiro();
+            if (opcao == 0) {
+                return;
+            }
             if (opcao < 1 || opcao > carteiras.size()) {
                 System.out.println("Carteira inválida!");
                 return;
@@ -1008,9 +1069,13 @@ public class ConsoleApplication implements CommandLineRunner {
             for (int i = 0; i < carteiras.size(); i++) {
                 System.out.println((i + 1) + ". " + carteiras.get(i).getNome());
             }
+            System.out.println("0. Voltar");
             System.out.print("Opção: ");
 
             int opcao = lerInteiro();
+            if (opcao == 0) {
+                return;
+            }
             if (opcao < 1 || opcao > carteiras.size()) {
                 System.out.println("Carteira inválida!");
                 return;
@@ -1454,28 +1519,55 @@ public class ConsoleApplication implements CommandLineRunner {
 
             switch (opcao) {
                 case 1:
-                    System.out.print("Novo nome: ");
-                    request.setNome(scanner.nextLine().trim());
+                    System.out.print("Novo nome (ou 0 para cancelar): ");
+                    String novoNome = scanner.nextLine().trim();
+                    if (novoNome.equals("0")) {
+                        return;
+                    }
+                    request.setNome(novoNome);
                     break;
                 case 2:
-                    System.out.print("Nova descrição: ");
-                    request.setDescricao(scanner.nextLine().trim());
+                    System.out.print("Nova descrição (ou 0 para cancelar): ");
+                    String novaDescricao = scanner.nextLine().trim();
+                    if (novaDescricao.equals("0")) {
+                        return;
+                    }
+                    request.setDescricao(novaDescricao);
                     break;
                 case 3:
                     System.out.println("Novo objetivo:");
                     System.out.println("1. Aposentadoria 2. Reserva de Emergência 3. Valorização Rápida 4. Renda Passiva 5. Educação 6. Casa Própria 7. Viagem 8. Outros");
+                    System.out.println("0. Voltar");
                     System.out.print("Opção: ");
-                    request.setObjetivo(obterObjetivoCarteira(lerInteiro()));
+                    int objetivoOpcao = lerInteiro();
+                    if (objetivoOpcao == 0) {
+                        return;
+                    }
+                    request.setObjetivo(obterObjetivoCarteira(objetivoOpcao));
                     break;
                 case 4:
                     System.out.println("Novo perfil de risco:");
                     System.out.println("1. Baixo Risco 2. Moderado Risco 3. Alto Risco");
+                    System.out.println("0. Voltar");
                     System.out.print("Opção: ");
-                    request.setPerfilRisco(obterPerfilRisco(lerInteiro()));
+                    int perfilOpcao = lerInteiro();
+                    if (perfilOpcao == 0) {
+                        return;
+                    }
+                    request.setPerfilRisco(obterPerfilRisco(perfilOpcao));
                     break;
                 case 5:
-                    System.out.print("Novo valor inicial (R$): ");
-                    request.setValorInicial(lerDecimal());
+                    System.out.print("Novo valor inicial (R$) ou 0 para cancelar: ");
+                    BigDecimal novoValor = lerDecimal();
+                    if (novoValor.compareTo(BigDecimal.ZERO) < 0) {
+                        System.out.println("Valor não pode ser negativo!");
+                        return;
+                    }
+                    if (novoValor.compareTo(BigDecimal.ZERO) == 0) {
+                        System.out.println("Operação cancelada.");
+                        return;
+                    }
+                    request.setValorInicial(novoValor);
                     break;
                 case 6:
                     return;
