@@ -202,7 +202,6 @@ public class GoogleSheetsService {
                     cotacoesCache = carregarCotacoes(resource);
                     lastModified = currentLastModified;
                     forceReload = false;
-                    System.out.println("📊 Cotações recarregadas do arquivo externo: " + externalFile.getAbsolutePath());
                     return;
                 }
             }
@@ -242,11 +241,7 @@ public class GoogleSheetsService {
         JsonNode rootNode = objectMapper.readTree(resource.getInputStream());
         Map<String, BigDecimal> cotacoes = new HashMap<>();
 
-        int totalAtivos = 0;
-        int ativosProcessados = 0;
-        
         for (JsonNode ativo : rootNode) {
-            totalAtivos++;
             // Tenta encontrar código em diferentes campos possíveis
             String codigo = null;
             if (ativo.has("Código")) {
@@ -291,20 +286,17 @@ public class GoogleSheetsService {
                     BigDecimal preco = new BigDecimal(precoStr)
                             .setScale(2, RoundingMode.HALF_UP); // Arredonda para 2 casas
                     cotacoes.put(codigo.toUpperCase(), preco);
-                    ativosProcessados++;
                 } catch (NumberFormatException e) {
                     System.err.println("Erro ao converter preço para '" + codigo + "': " + precoStr);
                 }
             } else {
                 // Debug: mostra quais campos estão disponíveis no JSON
-                if (totalAtivos == 1) { // Só mostra uma vez para não poluir o log
+                if (cotacoes.isEmpty()) { // Só mostra uma vez para não poluir o log
                     System.out.println("⚠️ Campos disponíveis no JSON (primeiro registro):");
                     ativo.fieldNames().forEachRemaining(field -> System.out.println("  - " + field));
                 }
             }
         }
-        
-        System.out.println("📊 Cotações carregadas: " + ativosProcessados + " de " + totalAtivos + " ativos no JSON");
 
         return cotacoes;
     }

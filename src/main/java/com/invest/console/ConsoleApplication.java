@@ -732,91 +732,261 @@ public class ConsoleApplication implements CommandLineRunner {
             return;
         }
 
-        System.out.print("Código do ativo (ex: PETR4) ou 0 para voltar: ");
-        String codigoAtivo = scanner.nextLine().trim().toUpperCase();
-        if (codigoAtivo.equals("0")) {
-            return;
-        }
-
-        System.out.print("Nome do ativo (ex: Petrobras) ou 0 para voltar: ");
-        String nomeAtivo = scanner.nextLine().trim();
-        if (nomeAtivo.equals("0")) {
-            return;
-        }
-
+        // Para outros tipos de transação, mostra tabela de ações disponíveis
         System.out.println();
-        System.out.println("Tipo do ativo:");
-        System.out.println("1. Ação");
-        System.out.println("2. FII");
-        System.out.println("3. ETF");
-        System.out.println("4. CDB");
-        System.out.println("5. LCI/LCA");
-        System.out.println("6. Tesouro");
-        System.out.println("7. Criptomoeda");
-        System.out.println("0. Voltar");
-        System.out.print("Opção: ");
-
-        int ativoOpcao = lerInteiro();
-        if (ativoOpcao == 0) {
-            return;
-        }
-        com.invest.model.TipoAtivo tipoAtivo = obterTipoAtivo(ativoOpcao);
-
-        System.out.print("Quantidade (ou 0 para voltar): ");
-        BigDecimal quantidade = lerDecimal();
-        if (quantidade.compareTo(BigDecimal.ZERO) <= 0) {
-            if (quantidade.compareTo(BigDecimal.ZERO) == 0) {
-                System.out.println("Operação cancelada.");
-                return;
-            } else {
-                System.out.println("Quantidade deve ser positiva!");
-                return;
-            }
-        }
-
-        System.out.print("Preço unitário (R$) ou 0 para voltar: ");
-        BigDecimal precoUnitario = lerDecimal();
-        if (precoUnitario.compareTo(BigDecimal.ZERO) <= 0) {
-            if (precoUnitario.compareTo(BigDecimal.ZERO) == 0) {
-                System.out.println("Operação cancelada.");
-                return;
-            } else {
-                System.out.println("Preço deve ser positivo!");
-                return;
-            }
-        }
-
-        // Calcula taxas automaticamente (0,5% do valor total da transação)
-        BigDecimal valorTotal = quantidade.multiply(precoUnitario);
-        BigDecimal taxas = calcularTaxasCorretagem(valorTotal);
-        System.out.println("Taxas/corretagem calculadas automaticamente: R$ " + formatarValor(taxas));
-
-        System.out.print("Observações (opcional): ");
-        String observacoes = scanner.nextLine().trim();
+        System.out.println("AÇÕES DISPONÍVEIS");
+        System.out.println("═══════════════════════════════════════════════════════════════");
+        System.out.println();
 
         try {
-            com.invest.dto.TransacaoRequest request = new com.invest.dto.TransacaoRequest();
-            request.setTipoTransacao(tipoTransacao);
-            request.setCodigoAtivo(codigoAtivo);
-            request.setNomeAtivo(nomeAtivo);
-            request.setTipoAtivo(tipoAtivo);
-            request.setQuantidade(quantidade);
-            request.setPrecoUnitario(precoUnitario);
-            request.setTaxasCorretagem(taxas);
-            request.setObservacoes(observacoes);
+            Map<String, BigDecimal> cotacoes = googleSheetsService.getAllCotacoes();
 
-            com.invest.model.Transacao transacao = transacaoService.createTransacao(carteira.getId(), request);
+            if (cotacoes.isEmpty()) {
+                System.out.println("Nenhuma cotação disponível no momento.");
+                System.out.println();
+            } else {
+                // Ordenar por código
+                List<String> codigos = new ArrayList<>(cotacoes.keySet());
+                Collections.sort(codigos);
 
-            System.out.println();
-            System.out.println("Transação registrada com sucesso!");
-            System.out.println("Valor total: R$ " + formatarValor(transacao.getValorTotal()));
-            System.out.println("Valor líquido: R$ " + formatarValor(transacao.getValorLiquido()));
-            System.out.println();
+                System.out.println("┌─────┬──────────────┬──────────────────────┐");
+                System.out.println("│ Op  │ Código       │ Preço               │");
+                System.out.println("├─────┼──────────────┼──────────────────────┤");
 
+                int index = 1;
+                Map<Integer, String> mapaOpcoes = new HashMap<>();
+                for (String codigo : codigos) {
+                    BigDecimal preco = cotacoes.get(codigo);
+                    mapaOpcoes.put(index, codigo);
+                    System.out.printf("│ %-3d │ %-12s │ R$ %-17s │\n", index, codigo, formatarValor(preco));
+                    index++;
+                }
+                System.out.println("└─────┴──────────────┴──────────────────────┘");
+                System.out.println();
+
+                System.out.println("Escolha a ação (0 para digitar manualmente):");
+                System.out.print("Opção: ");
+                int opcao = lerInteiro();
+
+                String codigoAtivo;
+                String nomeAtivo;
+                BigDecimal precoAtual = null;
+
+                if (opcao == 0) {
+                    // Permite digitar manualmente
+                    System.out.print("Código do ativo (ex: PETR4) ou 0 para voltar: ");
+                    codigoAtivo = scanner.nextLine().trim().toUpperCase();
+                    if (codigoAtivo.equals("0")) {
+                        return;
+                    }
+                    System.out.print("Nome do ativo (ex: Petrobras) ou 0 para voltar: ");
+                    nomeAtivo = scanner.nextLine().trim();
+                    if (nomeAtivo.equals("0")) {
+                        return;
+                    }
+                } else {
+                    if (!mapaOpcoes.containsKey(opcao)) {
+                        System.out.println("Opção inválida!");
+                        System.out.println();
+                        return;
+                    }
+                    codigoAtivo = mapaOpcoes.get(opcao);
+                    nomeAtivo = codigoAtivo;
+                    precoAtual = cotacoes.get(codigoAtivo);
+                    System.out.println();
+                    System.out.println("Ação selecionada: " + codigoAtivo);
+                    if (precoAtual != null) {
+                        System.out.println("Preço atual: R$ " + formatarValor(precoAtual));
+                    }
+                    System.out.println();
+                }
+
+                // Continua com o restante do processo de registro
+                System.out.println("Tipo do ativo:");
+                System.out.println("1. Ação");
+                System.out.println("2. FII");
+                System.out.println("3. ETF");
+                System.out.println("4. CDB");
+                System.out.println("5. LCI/LCA");
+                System.out.println("6. Tesouro");
+                System.out.println("7. Criptomoeda");
+                System.out.print("Opção: ");
+                int tipoAtivoOpcao = lerInteiro();
+                com.invest.model.TipoAtivo tipoAtivo = obterTipoAtivo(tipoAtivoOpcao);
+
+                System.out.print("Quantidade (ou 0 para voltar): ");
+                BigDecimal quantidade = lerDecimal();
+                if (quantidade.compareTo(BigDecimal.ZERO) <= 0) {
+                    if (quantidade.compareTo(BigDecimal.ZERO) == 0) {
+                        return;
+                    } else {
+                        System.out.println("Quantidade deve ser positiva!");
+                        return;
+                    }
+                }
+
+                BigDecimal precoUnitario;
+                if (precoAtual != null) {
+                    System.out.print("Preço unitário (R$) [Enter para usar preço atual: R$ " + formatarValor(precoAtual) + "]: ");
+                    String precoInput = scanner.nextLine().trim();
+                    if (precoInput.isEmpty()) {
+                        precoUnitario = precoAtual;
+                    } else {
+                        try {
+                            precoUnitario = new BigDecimal(precoInput.replace(",", "."));
+                        } catch (NumberFormatException e) {
+                            System.out.println("Preço inválido! Usando preço atual.");
+                            precoUnitario = precoAtual;
+                        }
+                    }
+                } else {
+                    System.out.print("Preço unitário (R$) ou 0 para voltar: ");
+                    precoUnitario = lerDecimal();
+                    if (precoUnitario.compareTo(BigDecimal.ZERO) <= 0) {
+                        if (precoUnitario.compareTo(BigDecimal.ZERO) == 0) {
+                            return;
+                        } else {
+                            System.out.println("Preço deve ser positivo!");
+                            return;
+                        }
+                    }
+                }
+
+                System.out.print("Taxas de corretagem (R$) [Enter para 0]: ");
+                String taxasInput = scanner.nextLine().trim();
+                BigDecimal taxas = BigDecimal.ZERO;
+                if (!taxasInput.isEmpty()) {
+                    try {
+                        taxas = new BigDecimal(taxasInput.replace(",", "."));
+                    } catch (NumberFormatException e) {
+                        System.out.println("Taxa inválida! Usando R$ 0,00.");
+                    }
+                }
+
+                System.out.print("Impostos (R$) [Enter para 0]: ");
+                String impostosInput = scanner.nextLine().trim();
+                BigDecimal impostos = BigDecimal.ZERO;
+                if (!impostosInput.isEmpty()) {
+                    try {
+                        impostos = new BigDecimal(impostosInput.replace(",", "."));
+                    } catch (NumberFormatException e) {
+                        System.out.println("Imposto inválido! Usando R$ 0,00.");
+                    }
+                }
+
+                System.out.print("Observações (opcional): ");
+                String observacoes = scanner.nextLine().trim();
+
+                com.invest.dto.TransacaoRequest request = new com.invest.dto.TransacaoRequest();
+                request.setTipoTransacao(tipoTransacao);
+                request.setCodigoAtivo(codigoAtivo);
+                request.setNomeAtivo(nomeAtivo);
+                request.setTipoAtivo(tipoAtivo);
+                request.setQuantidade(quantidade);
+                request.setPrecoUnitario(precoUnitario);
+                request.setTaxasCorretagem(taxas);
+                request.setImpostos(impostos);
+                request.setObservacoes(observacoes);
+
+                com.invest.model.Transacao transacao = transacaoService.createTransacao(carteira.getId(), request);
+
+                System.out.println();
+                System.out.println("Transação registrada com sucesso!");
+                System.out.println("Valor total: R$ " + formatarValor(transacao.getValorTotal()));
+                System.out.println("Valor líquido: R$ " + formatarValor(transacao.getValorLiquido()));
+                System.out.println();
+            }
         } catch (Exception e) {
             System.out.println();
-            System.out.println("Erro ao registrar transação: " + e.getMessage());
+            System.out.println("Erro ao buscar cotações: " + e.getMessage());
             System.out.println();
+            // Se houver erro, permite digitar manualmente
+            System.out.print("Código do ativo (ex: PETR4) ou 0 para voltar: ");
+            String codigoAtivo = scanner.nextLine().trim().toUpperCase();
+            if (codigoAtivo.equals("0")) {
+                return;
+            }
+
+            System.out.print("Nome do ativo (ex: Petrobras) ou 0 para voltar: ");
+            String nomeAtivo = scanner.nextLine().trim();
+            if (nomeAtivo.equals("0")) {
+                return;
+            }
+
+            System.out.println();
+            System.out.println("Tipo do ativo:");
+            System.out.println("1. Ação");
+            System.out.println("2. FII");
+            System.out.println("3. ETF");
+            System.out.println("4. CDB");
+            System.out.println("5. LCI/LCA");
+            System.out.println("6. Tesouro");
+            System.out.println("7. Criptomoeda");
+            System.out.println("0. Voltar");
+            System.out.print("Opção: ");
+
+            int ativoOpcao = lerInteiro();
+            if (ativoOpcao == 0) {
+                return;
+            }
+            com.invest.model.TipoAtivo tipoAtivo = obterTipoAtivo(ativoOpcao);
+
+            System.out.print("Quantidade (ou 0 para voltar): ");
+            BigDecimal quantidade = lerDecimal();
+            if (quantidade.compareTo(BigDecimal.ZERO) <= 0) {
+                if (quantidade.compareTo(BigDecimal.ZERO) == 0) {
+                    System.out.println("Operação cancelada.");
+                    return;
+                } else {
+                    System.out.println("Quantidade deve ser positiva!");
+                    return;
+                }
+            }
+
+            System.out.print("Preço unitário (R$) ou 0 para voltar: ");
+            BigDecimal precoUnitario = lerDecimal();
+            if (precoUnitario.compareTo(BigDecimal.ZERO) <= 0) {
+                if (precoUnitario.compareTo(BigDecimal.ZERO) == 0) {
+                    System.out.println("Operação cancelada.");
+                    return;
+                } else {
+                    System.out.println("Preço deve ser positivo!");
+                    return;
+                }
+            }
+
+            // Calcula taxas automaticamente (0,5% do valor total da transação)
+            BigDecimal valorTotal = quantidade.multiply(precoUnitario);
+            BigDecimal taxas = calcularTaxasCorretagem(valorTotal);
+            System.out.println("Taxas/corretagem calculadas automaticamente: R$ " + formatarValor(taxas));
+
+            System.out.print("Observações (opcional): ");
+            String observacoes = scanner.nextLine().trim();
+
+            try {
+                com.invest.dto.TransacaoRequest request = new com.invest.dto.TransacaoRequest();
+                request.setTipoTransacao(tipoTransacao);
+                request.setCodigoAtivo(codigoAtivo);
+                request.setNomeAtivo(nomeAtivo);
+                request.setTipoAtivo(tipoAtivo);
+                request.setQuantidade(quantidade);
+                request.setPrecoUnitario(precoUnitario);
+                request.setTaxasCorretagem(taxas);
+                request.setObservacoes(observacoes);
+
+                com.invest.model.Transacao transacao = transacaoService.createTransacao(carteira.getId(), request);
+
+                System.out.println();
+                System.out.println("Transação registrada com sucesso!");
+                System.out.println("Valor total: R$ " + formatarValor(transacao.getValorTotal()));
+                System.out.println("Valor líquido: R$ " + formatarValor(transacao.getValorLiquido()));
+                System.out.println();
+
+            } catch (Exception ex) {
+                System.out.println();
+                System.out.println("Erro ao registrar transação: " + ex.getMessage());
+                System.out.println();
+            }
         }
     }
 
