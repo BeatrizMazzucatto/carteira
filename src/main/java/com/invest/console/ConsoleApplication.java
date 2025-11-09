@@ -496,6 +496,7 @@ public class ConsoleApplication implements CommandLineRunner {
             System.out.println("3. Ver Transações");
             System.out.println("4. Ver Ativos com Rentabilidade");
             System.out.println("5. Editar Carteira");
+            System.out.println("6. Histórico da Carteira");
             System.out.println("0. Voltar");
             System.out.println();
             System.out.print("Opção: ");
@@ -518,6 +519,9 @@ public class ConsoleApplication implements CommandLineRunner {
                     break;
                 case 5:
                     editarCarteira(carteira);
+                    break;
+                case 6:
+                    mostrarHistoricoCarteira(carteira);
                     break;
                 case 0:
                     return;
@@ -1919,6 +1923,135 @@ public class ConsoleApplication implements CommandLineRunner {
         } catch (Exception e) {
             System.out.println("Erro ao atualizar carteira: " + e.getMessage());
             System.out.println();
+        }
+    }
+
+    /**
+     * Mostra o histórico completo da carteira com todas as alterações de valores
+     */
+    private void mostrarHistoricoCarteira(Carteira carteira) {
+        System.out.println("HISTÓRICO DA CARTEIRA - " + carteira.getNome());
+        System.out.println("═══════════════════════════════════════════════════════════════");
+        System.out.println();
+        
+        try {
+            // Recarrega a carteira para garantir dados atualizados
+            carteira = carteiraService.getCarteiraById(carteira.getId());
+            
+            // Busca todas as transações ordenadas por data
+            List<com.invest.model.Transacao> transacoes = transacaoRepository.findByCarteira(carteira);
+            transacoes.sort((t1, t2) -> {
+                if (t1.getDataTransacao() == null && t2.getDataTransacao() == null) return 0;
+                if (t1.getDataTransacao() == null) return 1;
+                if (t2.getDataTransacao() == null) return -1;
+                return t1.getDataTransacao().compareTo(t2.getDataTransacao());
+            });
+            
+            // Calcula valores acumulados ao longo do tempo
+            BigDecimal valorTotalInvestido = BigDecimal.ZERO;
+            BigDecimal valorTotalVendas = BigDecimal.ZERO;
+            BigDecimal valorTotalTaxas = BigDecimal.ZERO;
+            
+            System.out.println("CRIAÇÃO DA CARTEIRA:");
+            System.out.println("───────────────────────────────────────────────────────────");
+            System.out.println("Data: " + formatarData(carteira.getDataCriacao()));
+            System.out.println("Valor inicial da carteira: R$ " + formatarValor(carteira.getValorInicial()));
+            System.out.println();
+            System.out.println();
+            
+            if (transacoes.isEmpty()) {
+                System.out.println("Nenhuma transação registrada ainda.");
+                System.out.println();
+            } else {
+                System.out.println("TRANSAÇÕES E ALTERAÇÕES:");
+                System.out.println("───────────────────────────────────────────────────────────");
+                System.out.println();
+                
+                for (com.invest.model.Transacao transacao : transacoes) {
+                    System.out.println("📅 " + formatarData(transacao.getDataTransacao()));
+                    System.out.println("   Tipo: " + transacao.getTipoTransacao().getDescricao());
+                    System.out.println("   Ativo: " + transacao.getCodigoAtivo() + " (" + transacao.getNomeAtivo() + ")");
+                    System.out.println("   Quantidade: " + formatarQuantidade(transacao.getQuantidade()));
+                    System.out.println("   Preço unitário: R$ " + formatarValor(transacao.getPrecoUnitario()));
+                    System.out.println("   Valor total: R$ " + formatarValor(transacao.getValorTotal()));
+                    
+                    if (transacao.getTipoTransacao() == com.invest.model.TipoTransacao.COMPRA) {
+                        valorTotalInvestido = valorTotalInvestido.add(transacao.getValorTotal());
+                        if (transacao.getTaxasCorretagem() != null) {
+                            valorTotalTaxas = valorTotalTaxas.add(transacao.getTaxasCorretagem());
+                            System.out.println("   Taxas: R$ " + formatarValor(transacao.getTaxasCorretagem()));
+                        }
+                        System.out.println("   → Compra realizada");
+                    } else if (transacao.getTipoTransacao() == com.invest.model.TipoTransacao.VENDA) {
+                        valorTotalVendas = valorTotalVendas.add(transacao.getValorTotal());
+                        if (transacao.getTaxasCorretagem() != null) {
+                            valorTotalTaxas = valorTotalTaxas.add(transacao.getTaxasCorretagem());
+                            System.out.println("   Taxas: R$ " + formatarValor(transacao.getTaxasCorretagem()));
+                        }
+                        System.out.println("   → Venda realizada");
+                    }
+                    
+                    if (transacao.getObservacoes() != null && !transacao.getObservacoes().trim().isEmpty()) {
+                        System.out.println("   Observações: " + transacao.getObservacoes());
+                    }
+                    
+                    System.out.println();
+                }
+            }
+            
+            // Mostra alterações no valor da carteira (quando foi editado)
+            if (carteira.getDataAtualizacao() != null && 
+                carteira.getDataAtualizacao().isAfter(carteira.getDataCriacao())) {
+                System.out.println();
+                System.out.println("ALTERAÇÕES NO VALOR DA CARTEIRA:");
+                System.out.println("───────────────────────────────────────────────────────────");
+                System.out.println("Data da última alteração: " + formatarData(carteira.getDataAtualizacao()));
+                System.out.println("Valor atual da carteira: R$ " + formatarValor(carteira.getValorInicial()));
+                System.out.println();
+            }
+            
+            // Resumo final
+            System.out.println();
+            System.out.println("═══════════════════════════════════════════════════════════════");
+            System.out.println("RESUMO DO HISTÓRICO:");
+            System.out.println("═══════════════════════════════════════════════════════════════");
+            System.out.println();
+            System.out.println("Valor inicial da carteira: R$ " + formatarValor(carteira.getValorInicial()));
+            System.out.println("Total de compras: R$ " + formatarValor(valorTotalInvestido));
+            System.out.println("Total de vendas: R$ " + formatarValor(valorTotalVendas));
+            System.out.println("Total de taxas: R$ " + formatarValor(valorTotalTaxas));
+            System.out.println();
+            
+            BigDecimal valorLiquidoInvestido = valorTotalInvestido.subtract(valorTotalVendas).add(valorTotalTaxas);
+            System.out.println("Valor líquido investido: R$ " + formatarValor(valorLiquidoInvestido));
+            System.out.println("Valor atual de mercado: R$ " + formatarValor(carteira.getValorAtual()));
+            System.out.println();
+            
+            if (carteira.getValorAtual() != null && valorLiquidoInvestido.compareTo(BigDecimal.ZERO) > 0) {
+                BigDecimal rentabilidade = carteira.getValorAtual().subtract(valorLiquidoInvestido);
+                BigDecimal percentual = rentabilidade
+                    .divide(valorLiquidoInvestido, 4, java.math.RoundingMode.HALF_UP)
+                    .multiply(new BigDecimal("100"));
+                String sinal = rentabilidade.compareTo(BigDecimal.ZERO) >= 0 ? "+" : "";
+                System.out.println("Rentabilidade: R$ " + sinal + formatarValor(rentabilidade) + 
+                                 " (" + sinal + formatarPercentual(percentual) + "%)");
+            }
+            
+            System.out.println();
+            System.out.println("Total de transações: " + transacoes.size());
+            System.out.println();
+            System.out.println();
+            System.out.println("Pressione Enter para continuar...");
+            scanner.nextLine();
+            System.out.println();
+            
+        } catch (Exception e) {
+            System.out.println();
+            System.out.println("Erro ao exibir histórico: " + e.getMessage());
+            e.printStackTrace();
+            System.out.println();
+            System.out.println("Pressione Enter para continuar...");
+            scanner.nextLine();
         }
     }
 
