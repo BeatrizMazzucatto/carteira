@@ -56,6 +56,9 @@ public class ConsoleApplication implements CommandLineRunner {
     @Autowired
     private AuthService authService;
 
+    @Autowired
+    private com.invest.service.InflacaoService inflacaoService;
+
     private Scanner scanner = new Scanner(System.in);
     private Investidor investidorLogado = null;
     private String jwtToken = null;
@@ -502,6 +505,7 @@ public class ConsoleApplication implements CommandLineRunner {
             System.out.println("4. Ver Ativos com Rentabilidade");
             System.out.println("5. Editar Carteira");
             System.out.println("6. Histórico da Carteira");
+            System.out.println("7. Análise de Inflação e Valores Deflacionados");
             System.out.println("0. Voltar");
             System.out.println();
             System.out.print("Opção: ");
@@ -527,6 +531,9 @@ public class ConsoleApplication implements CommandLineRunner {
                     break;
                 case 6:
                     mostrarHistoricoCarteira(carteira);
+                    break;
+                case 7:
+                    mostrarAnaliseInflacao(carteira);
                     break;
                 case 0:
                     return;
@@ -2392,6 +2399,118 @@ public class ConsoleApplication implements CommandLineRunner {
     }
 
     /**
+     * Mostra análise completa de inflação e valores deflacionados da carteira
+     */
+    private void mostrarAnaliseInflacao(Carteira carteira) {
+        analiseCompletaCarteira(carteira);
+    }
+
+    private void analiseCompletaCarteira(Carteira carteira) {
+        System.out.println("ANÁLISE COMPLETA DE INFLAÇÃO - " + carteira.getNome());
+        System.out.println("═══════════════════════════════════════════════════════════════");
+        System.out.println();
+        
+        try {
+            // Busca todas as transações
+            List<com.invest.model.Transacao> transacoes = transacaoRepository.findByCarteira(carteira);
+            
+            if (transacoes.isEmpty()) {
+                System.out.println("Nenhuma transação registrada nesta carteira.");
+                System.out.println();
+                System.out.println("Pressione Enter para continuar...");
+                scanner.nextLine();
+                return;
+            }
+            
+            // Calcula valores totais
+            BigDecimal valorTotalCompras = transacaoRepository.calcularValorTotalCompras(carteira);
+            BigDecimal valorTotalVendas = transacaoRepository.calcularValorTotalVendas(carteira);
+            BigDecimal valorAtualMercado = carteira.getValorAtual() != null ? carteira.getValorAtual() : BigDecimal.ZERO;
+            
+            // Data da primeira transação e data atual
+            java.time.LocalDate dataPrimeiraTransacao = transacoes.stream()
+                .map(t -> t.getDataTransacao().toLocalDate())
+                .min(java.util.Comparator.naturalOrder())
+                .orElse(java.time.LocalDate.now());
+            
+            java.time.LocalDate dataAtual = java.time.LocalDate.now();
+            
+            // Calcula inflação acumulada
+            BigDecimal inflacaoAcumulada = inflacaoService.calcularInflacaoAcumulada(dataPrimeiraTransacao, dataAtual);
+            
+            // Valor investido deflacionado
+            BigDecimal valorInvestidoDeflacionado = inflacaoService.calcularValorDeflacionado(
+                valorTotalCompras, dataAtual, dataPrimeiraTransacao);
+            
+            // Valor atual deflacionado
+            BigDecimal valorAtualDeflacionado = inflacaoService.calcularValorDeflacionado(
+                valorAtualMercado, dataAtual, dataPrimeiraTransacao);
+            
+            // Ganho real
+            BigDecimal ganhoReal = inflacaoService.calcularGanhoReal(
+                valorTotalCompras, valorAtualMercado, dataPrimeiraTransacao, dataAtual);
+            
+            System.out.println("PERÍODO DE ANÁLISE:");
+            System.out.println("───────────────────────────────────────────────────────────");
+            System.out.println("Data da primeira transação: " + formatarData(dataPrimeiraTransacao.atStartOfDay()));
+            System.out.println("Data atual: " + formatarData(dataAtual.atStartOfDay()));
+            System.out.println();
+            
+            System.out.println("VALORES NOMINAIS:");
+            System.out.println("───────────────────────────────────────────────────────────");
+            System.out.println("Total investido (compras): R$ " + formatarValor(valorTotalCompras));
+            System.out.println("Total vendido: R$ " + formatarValor(valorTotalVendas));
+            System.out.println("Valor atual de mercado: R$ " + formatarValor(valorAtualMercado));
+            System.out.println();
+            
+            System.out.println("INFLAÇÃO:");
+            System.out.println("───────────────────────────────────────────────────────────");
+            System.out.println("Inflação acumulada no período: " + formatarPercentual(inflacaoAcumulada.multiply(new BigDecimal("100"))));
+            System.out.println();
+            
+            System.out.println("VALORES DEFLACIONADOS (poder de compra na data inicial):");
+            System.out.println("───────────────────────────────────────────────────────────");
+            System.out.println("Valor investido deflacionado: R$ " + formatarValor(valorInvestidoDeflacionado));
+            System.out.println("Valor atual deflacionado: R$ " + formatarValor(valorAtualDeflacionado));
+            System.out.println();
+            
+            System.out.println("GANHO REAL:");
+            System.out.println("───────────────────────────────────────────────────────────");
+            BigDecimal ganhoNominal = valorAtualMercado.subtract(valorTotalCompras);
+            BigDecimal ganhoNominalPercentual = BigDecimal.ZERO;
+            if (valorTotalCompras.compareTo(BigDecimal.ZERO) > 0) {
+                ganhoNominalPercentual = ganhoNominal.divide(valorTotalCompras, 4, java.math.RoundingMode.HALF_UP)
+                                                     .multiply(new BigDecimal("100"));
+            }
+            
+            System.out.println("Ganho nominal: R$ " + formatarValor(ganhoNominal) + 
+                             " (" + formatarPercentual(ganhoNominalPercentual) + "%)");
+            System.out.println("Ganho real: " + formatarPercentual(ganhoReal.multiply(new BigDecimal("100"))));
+            System.out.println();
+            
+            if (ganhoReal.compareTo(BigDecimal.ZERO) > 0) {
+                System.out.println("✅ A carteira teve ganho real positivo!");
+            } else if (ganhoReal.compareTo(BigDecimal.ZERO) < 0) {
+                System.out.println("⚠️ A carteira teve perda real (ganho não superou a inflação)");
+            } else {
+                System.out.println("➡️ A carteira manteve o poder de compra");
+            }
+            System.out.println();
+            System.out.println();
+            
+        } catch (Exception e) {
+            System.out.println();
+            System.out.println("Erro ao realizar análise: " + e.getMessage());
+            e.printStackTrace();
+            System.out.println();
+        }
+        
+        System.out.println("Pressione Enter para continuar...");
+        scanner.nextLine();
+        System.out.println();
+    }
+
+    /**
      * Mostra o histórico completo da carteira com todas as alterações de valores
      */
     private void mostrarHistoricoCarteira(Carteira carteira) {
@@ -2418,8 +2537,6 @@ public class ConsoleApplication implements CommandLineRunner {
             BigDecimal valorTotalTaxas = BigDecimal.ZERO;
             BigDecimal taxasCompras = BigDecimal.ZERO;
             BigDecimal taxasVendas = BigDecimal.ZERO;
-            BigDecimal quantidadeTotalComprada = BigDecimal.ZERO;
-            BigDecimal quantidadeTotalVendida = BigDecimal.ZERO;
             
             System.out.println("CRIAÇÃO DA CARTEIRA:");
             System.out.println("───────────────────────────────────────────────────────────");
