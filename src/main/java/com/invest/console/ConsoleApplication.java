@@ -129,12 +129,16 @@ public class ConsoleApplication implements CommandLineRunner {
                 investidorLogado = resultado.getInvestidor();
                 jwtToken = resultado.getToken();
                 System.out.println();
-                System.out.println("Login realizado com sucesso!");
+                System.out.println();
+                System.out.println("✅ Login realizado com sucesso!");
+                System.out.println();
                 System.out.println("Bem-vindo(a), " + investidorLogado.getNome() + "!");
+                System.out.println();
                 System.out.println();
             } else {
                 System.out.println();
                 System.out.println("Email ou senha incorretos!");
+                System.out.println();
                 System.out.println();
                 System.out.println("Opções:");
                 System.out.println("1. Tentar novamente");
@@ -237,8 +241,11 @@ public class ConsoleApplication implements CommandLineRunner {
             investidorService.updateInvestidor(investidor.getId(), investidor);
             
             System.out.println();
+            System.out.println();
             System.out.println("✅ Senha redefinida com sucesso!");
+            System.out.println();
             System.out.println("Agora você pode fazer login com a nova senha.");
+            System.out.println();
             System.out.println();
             System.out.println("Pressione Enter para continuar...");
             scanner.nextLine();
@@ -300,8 +307,11 @@ public class ConsoleApplication implements CommandLineRunner {
             }
 
             System.out.println();
-            System.out.println("Conta criada com sucesso!");
+            System.out.println();
+            System.out.println("✅ Conta criada com sucesso!");
+            System.out.println();
             System.out.println("Bem-vindo(a), " + investidorLogado.getNome() + "!");
+            System.out.println();
             System.out.println();
         } catch (Exception e) {
             System.out.println();
@@ -469,12 +479,15 @@ public class ConsoleApplication implements CommandLineRunner {
             System.out.println("Objetivo: " + (carteira.getObjetivo() != null ? carteira.getObjetivo().getDescricao() : "N/A"));
             System.out.println("Prazo: " + (carteira.getPrazo() != null ? carteira.getPrazo().getDescricao() : "N/A"));
             System.out.println("Perfil de Risco: " + (carteira.getPerfilRisco() != null ? carteira.getPerfilRisco().getDescricao() : "N/A"));
+            System.out.println();
             System.out.println("Valor da Carteira: R$ " + formatarValor(carteira.getValorInicial()));
             System.out.println("Valor Atual: R$ " + formatarValor(carteira.getValorAtual()));
+            System.out.println();
             System.out.println("Criada em: " + formatarData(carteira.getDataCriacao()));
             if (carteira.getDataAtualizacao() != null) {
                 System.out.println("Modificada em: " + formatarData(carteira.getDataAtualizacao()));
             }
+            System.out.println();
             System.out.println();
 
             System.out.println("Escolha uma opção:");
@@ -920,9 +933,11 @@ public class ConsoleApplication implements CommandLineRunner {
                 System.out.println();
                 System.out.println("⚠️ SALDO INSUFICIENTE!");
                 System.out.println("═══════════════════════════════════════════════════════════════");
+                System.out.println();
                 System.out.println("Valor disponível na carteira: R$ " + formatarValor(valorDisponivel));
                 System.out.println("Valor necessário para esta compra: R$ " + formatarValor(valorLiquido));
                 System.out.println("Valor em falta: R$ " + formatarValor(valorLiquido.subtract(valorDisponivel)));
+                System.out.println();
                 System.out.println();
                 System.out.println("Opções:");
                 System.out.println("1. Ajustar valor da compra para o saldo disponível");
@@ -967,11 +982,14 @@ public class ConsoleApplication implements CommandLineRunner {
                     taxas = calcularTaxasCorretagem(valorTotal);
                     valorLiquido = valorTotal.add(taxas);
                     
+                    System.out.println();
                     System.out.println("✅ Valor da compra ajustado automaticamente!");
+                    System.out.println();
                     System.out.println("Nova quantidade: " + formatarQuantidade(quantidade));
                     System.out.println("Novo valor total: R$ " + formatarValor(valorTotal));
                     System.out.println("Taxas/corretagem: R$ " + formatarValor(taxas));
                     System.out.println("Valor líquido: R$ " + formatarValor(valorLiquido));
+                    System.out.println();
                     System.out.println();
                     
                     // Continua com o processo de compra com os valores ajustados
@@ -979,6 +997,32 @@ public class ConsoleApplication implements CommandLineRunner {
                     // Alterar valor da carteira
                     System.out.print("Novo valor da carteira (R$): ");
                     BigDecimal novoValorInicial = lerDecimal();
+                    
+                    // Calcula o valor total investido (compras + taxas) - recarrega para garantir dados atualizados
+                    carteira = carteiraService.getCarteiraById(carteira.getId());
+                    BigDecimal valorTotalComprasValidacao = transacaoRepository.calcularValorTotalCompras(carteira);
+                    BigDecimal valorTotalTaxasValidacao = transacaoRepository.findByCarteira(carteira).stream()
+                            .filter(t -> t.getTipoTransacao() == com.invest.model.TipoTransacao.COMPRA)
+                            .map(t -> t.getTaxasCorretagem() != null ? t.getTaxasCorretagem() : BigDecimal.ZERO)
+                            .reduce(BigDecimal.ZERO, BigDecimal::add);
+                    BigDecimal valorTotalInvestido = valorTotalComprasValidacao.add(valorTotalTaxasValidacao);
+                    
+                    // Valida se o novo valor não é menor que o total investido
+                    if (novoValorInicial.compareTo(valorTotalInvestido) < 0) {
+                        System.out.println();
+                        System.out.println();
+                        System.out.println("⚠️ VALOR INVÁLIDO!");
+                        System.out.println("═══════════════════════════════════════════════════════════════");
+                        System.out.println();
+                        System.out.println("O valor da carteira não pode ser menor que o total investido.");
+                        System.out.println();
+                        System.out.println("Valor total investido (compras + taxas): R$ " + formatarValor(valorTotalInvestido));
+                        System.out.println("Valor informado: R$ " + formatarValor(novoValorInicial));
+                        System.out.println("Valor mínimo permitido: R$ " + formatarValor(valorTotalInvestido));
+                        System.out.println();
+                        System.out.println();
+                        return;
+                    }
                     
                     try {
                         com.invest.dto.CarteiraRequest requestUpdate = new com.invest.dto.CarteiraRequest();
@@ -993,9 +1037,12 @@ public class ConsoleApplication implements CommandLineRunner {
                         // Recarrega a carteira do banco para ter os dados atualizados
                         carteira = carteiraService.getCarteiraById(carteira.getId());
                         
-                        System.out.println("Valor da carteira atualizado para R$ " + formatarValor(novoValorInicial));
+                        System.out.println();
+                        System.out.println("✅ Valor da carteira atualizado para R$ " + formatarValor(novoValorInicial));
+                        System.out.println();
                         System.out.println();
                         System.out.println("Reiniciando processo de compra...");
+                        System.out.println();
                         System.out.println();
                         
                         // Reinicia o processo de compra com a carteira atualizada
@@ -1022,22 +1069,29 @@ public class ConsoleApplication implements CommandLineRunner {
 
             // Confirmar compra
             System.out.println();
+            System.out.println();
             System.out.println("RESUMO DA COMPRA:");
+            System.out.println("═══════════════════════════════════════════════════════════════");
+            System.out.println();
             System.out.println("Ação: " + codigoAtivo);
             System.out.println("Quantidade: " + formatarQuantidade(quantidade));
             System.out.println("Preço unitário: R$ " + formatarValor(precoAtual));
+            System.out.println();
             System.out.println("Valor total: R$ " + formatarValor(valorTotal));
             System.out.println("Taxas/corretagem (calculadas automaticamente): R$ " + formatarValor(taxas));
             System.out.println("Valor líquido: R$ " + formatarValor(valorLiquido));
+            System.out.println();
             System.out.println("Valor disponível na carteira: R$ " + formatarValor(valorDisponivel));
             System.out.println("Valor restante após compra: R$ " + formatarValor(valorDisponivel.subtract(valorLiquido)));
-
+            System.out.println();
             System.out.println();
             System.out.print("Confirmar compra? (S/N): ");
             String confirmacao = scanner.nextLine().trim().toUpperCase();
 
             if (!confirmacao.equals("S")) {
+                System.out.println();
                 System.out.println("Compra cancelada.");
+                System.out.println();
                 System.out.println();
                 return;
             }
@@ -1056,9 +1110,12 @@ public class ConsoleApplication implements CommandLineRunner {
             com.invest.model.Transacao transacao = transacaoService.createTransacao(carteira.getId(), request);
 
             System.out.println();
-            System.out.println("Compra registrada com sucesso!");
+            System.out.println();
+            System.out.println("✅ Compra registrada com sucesso!");
+            System.out.println();
             System.out.println("Valor total: R$ " + formatarValor(transacao.getValorTotal()));
             System.out.println("Valor líquido: R$ " + formatarValor(transacao.getValorLiquido()));
+            System.out.println();
             System.out.println();
 
         } catch (Exception e) {
@@ -1575,13 +1632,17 @@ public class ConsoleApplication implements CommandLineRunner {
         String novaSenha = lerSenha();
         
         if (novaSenha.isEmpty()) {
+            System.out.println();
             System.out.println("Senha não pode ser vazia!");
+            System.out.println();
             System.out.println();
             return;
         }
         
         if (novaSenha.length() < 4) {
+            System.out.println();
             System.out.println("Senha deve ter no mínimo 4 caracteres!");
+            System.out.println();
             System.out.println();
             return;
         }
@@ -1590,7 +1651,9 @@ public class ConsoleApplication implements CommandLineRunner {
         String confirmacaoSenha = lerSenha();
         
         if (!novaSenha.equals(confirmacaoSenha)) {
+            System.out.println();
             System.out.println("As senhas não coincidem! Tente novamente.");
+            System.out.println();
             System.out.println();
             return;
         }
@@ -1606,9 +1669,13 @@ public class ConsoleApplication implements CommandLineRunner {
                 jwtToken = resultado.getToken();
             }
             
-            System.out.println("Senha alterada com sucesso!");
+            System.out.println();
+            System.out.println("✅ Senha alterada com sucesso!");
+            System.out.println();
         } catch (Exception e) {
+            System.out.println();
             System.out.println("Erro ao alterar senha: " + e.getMessage());
+            System.out.println();
         }
         System.out.println();
     }
@@ -1808,6 +1875,32 @@ public class ConsoleApplication implements CommandLineRunner {
                         System.out.println("Operação cancelada.");
                         return;
                     }
+                    
+                    // Calcula o valor total investido (compras + taxas)
+                    BigDecimal valorTotalCompras = transacaoRepository.calcularValorTotalCompras(carteira);
+                    BigDecimal valorTotalTaxas = transacaoRepository.findByCarteira(carteira).stream()
+                            .filter(t -> t.getTipoTransacao() == com.invest.model.TipoTransacao.COMPRA)
+                            .map(t -> t.getTaxasCorretagem() != null ? t.getTaxasCorretagem() : BigDecimal.ZERO)
+                            .reduce(BigDecimal.ZERO, BigDecimal::add);
+                    BigDecimal valorTotalInvestido = valorTotalCompras.add(valorTotalTaxas);
+                    
+                    // Valida se o novo valor não é menor que o total investido
+                    if (novoValor.compareTo(valorTotalInvestido) < 0) {
+                        System.out.println();
+                        System.out.println();
+                        System.out.println("⚠️ VALOR INVÁLIDO!");
+                        System.out.println("═══════════════════════════════════════════════════════════════");
+                        System.out.println();
+                        System.out.println("O valor da carteira não pode ser menor que o total investido.");
+                        System.out.println();
+                        System.out.println("Valor total investido (compras + taxas): R$ " + formatarValor(valorTotalInvestido));
+                        System.out.println("Valor informado: R$ " + formatarValor(novoValor));
+                        System.out.println("Valor mínimo permitido: R$ " + formatarValor(valorTotalInvestido));
+                        System.out.println();
+                        System.out.println();
+                        return;
+                    }
+                    
                     request.setValorInicial(novoValor);
                     break;
                 case 0:
@@ -1818,7 +1911,9 @@ public class ConsoleApplication implements CommandLineRunner {
             }
 
             carteiraService.updateCarteira(carteira.getId(), request);
-            System.out.println("Carteira atualizada com sucesso!");
+            System.out.println();
+            System.out.println("✅ Carteira atualizada com sucesso!");
+            System.out.println();
             System.out.println();
 
         } catch (Exception e) {
