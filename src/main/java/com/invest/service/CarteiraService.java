@@ -172,6 +172,9 @@ public class CarteiraService {
                 .orElseThrow(() -> new RuntimeException("Carteira não encontrada: " + carteiraId));
 
         try {
+            // Força recarregamento do cache de cotações para garantir dados atualizados
+            googleSheetsService.forcarRecarregamento();
+            
             // Atualiza o preço atual de cada ativo com base no JSON
             for (Ativo ativo : carteira.getAtivos()) {
                 String codigo = ativo.getCodigo();

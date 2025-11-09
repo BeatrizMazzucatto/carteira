@@ -1,292 +1,292 @@
 [
   {
-    "AÃ§Ã£o": "PETR4",
-    "Nome": "",
-    "PreÃ§o Atual": "29,75",
+    "Acao": "PETR4",
+    "PreÃ§o Atual": "32,18",
     "VariaÃ§Ã£o %": "0",
-    "MÃ¡ximo do Dia": "30,09",
-    "MÃ­nimo do Dia": "29,55",
-    "Data/Hora": "02/11/2025 16:49:28",
-    "atualizado_em": "02/11/2025 13:51:04"
+    "MÃ¡ximo do Dia": "32,18",
+    "MÃ­nimo do Dia": "30,85",
+    "Data/Hora": "09/11/2025 18:23:58",
+    "Risco": "BAIXO",
+    "atualizado_em": "09/11/2025 15:24:08"
   },
   {
-    "AÃ§Ã£o": "VALE3",
-    "Nome": "",
-    "PreÃ§o Atual": "18020",
-    "VariaÃ§Ã£o %": "2,15",
-    "MÃ¡ximo do Dia": "18130",
-    "MÃ­nimo do Dia": "17220",
-    "Data/Hora": "02/11/2025 16:49:28",
-    "atualizado_em": "02/11/2025 13:51:04"
+    "Acao": "VALE3",
+    "PreÃ§o Atual": "18010",
+    "VariaÃ§Ã£o %": "-2,96",
+    "MÃ¡ximo do Dia": "18200",
+    "MÃ­nimo do Dia": "17920",
+    "Data/Hora": "09/11/2025 18:23:58",
+    "Risco": "BAIXO",
+    "atualizado_em": "09/11/2025 15:24:08"
   },
   {
-    "AÃ§Ã£o": "ITUB4",
-    "Nome": "",
-    "PreÃ§o Atual": "39,44",
-    "VariaÃ§Ã£o %": "0,04",
-    "MÃ¡ximo do Dia": "39,63",
-    "MÃ­nimo do Dia": "39,32",
-    "Data/Hora": "02/11/2025 16:49:28",
-    "atualizado_em": "02/11/2025 13:51:04"
-  },
-  {
-    "AÃ§Ã£o": "BBDC4",
-    "Nome": "",
-    "PreÃ§o Atual": "18,16",
+    "Acao": "ITUB4",
+    "PreÃ§o Atual": "40,17",
     "VariaÃ§Ã£o %": "0",
-    "MÃ¡ximo do Dia": "18,28",
-    "MÃ­nimo do Dia": "17,9",
-    "Data/Hora": "02/11/2025 16:49:28",
-    "atualizado_em": "02/11/2025 13:51:04"
+    "MÃ¡ximo do Dia": "40,2",
+    "MÃ­nimo do Dia": "39,77",
+    "Data/Hora": "09/11/2025 18:23:58",
+    "Risco": "BAIXO",
+    "atualizado_em": "09/11/2025 15:24:08"
   },
   {
-    "AÃ§Ã£o": "BBAS3",
-    "Nome": "",
-    "PreÃ§o Atual": "2985",
-    "VariaÃ§Ã£o %": "-1,16",
-    "MÃ¡ximo do Dia": "3067,5",
-    "MÃ­nimo do Dia": "2985",
-    "Data/Hora": "02/11/2025 16:49:28",
-    "atualizado_em": "02/11/2025 13:51:04"
-  },
-  {
-    "AÃ§Ã£o": "ABEV3",
-    "Nome": "",
-    "PreÃ§o Atual": "3592,5",
-    "VariaÃ§Ã£o %": "1,2",
-    "MÃ¡ximo do Dia": "3597,5",
-    "MÃ­nimo do Dia": "3492,5",
-    "Data/Hora": "02/11/2025 16:49:28",
-    "atualizado_em": "02/11/2025 13:51:04"
-  },
-  {
-    "AÃ§Ã£o": "LREN3",
-    "Nome": "",
-    "PreÃ§o Atual": "4040",
-    "VariaÃ§Ã£o %": "-0,06",
-    "MÃ¡ximo do Dia": "4040",
-    "MÃ­nimo do Dia": "4040",
-    "Data/Hora": "02/11/2025 16:49:28",
-    "atualizado_em": "02/11/2025 13:51:04"
-  },
-  {
-    "AÃ§Ã£o": "MGLU3",
-    "Nome": "",
-    "PreÃ§o Atual": "2332",
-    "VariaÃ§Ã£o %": "-2,1",
-    "MÃ¡ximo do Dia": "2388",
-    "MÃ­nimo do Dia": "2269",
-    "Data/Hora": "02/11/2025 16:49:28",
-    "atualizado_em": "02/11/2025 13:51:04"
-  },
-  {
-    "AÃ§Ã£o": "SUZB3",
-    "Nome": "",
-    "PreÃ§o Atual": "13670",
-    "VariaÃ§Ã£o %": "0,74",
-    "MÃ¡ximo do Dia": "#N/A",
-    "MÃ­nimo do Dia": "#N/A",
-    "Data/Hora": "02/11/2025 16:49:28",
-    "atualizado_em": "02/11/2025 13:51:04"
-  },
-  {
-    "AÃ§Ã£o": "B3SA3",
-    "Nome": "",
-    "PreÃ§o Atual": "12,66",
+    "Acao": "BBDC4",
+    "PreÃ§o Atual": "18,73",
     "VariaÃ§Ã£o %": "0",
-    "MÃ¡ximo do Dia": "12,76",
-    "MÃ­nimo do Dia": "12,64",
-    "Data/Hora": "02/11/2025 16:49:28",
-    "atualizado_em": "02/11/2025 13:51:04"
+    "MÃ¡ximo do Dia": "18,73",
+    "MÃ­nimo do Dia": "18,47",
+    "Data/Hora": "09/11/2025 18:23:58",
+    "Risco": "BAIXO",
+    "atualizado_em": "09/11/2025 15:24:08"
   },
   {
-    "AÃ§Ã£o": "GGBR4",
-    "Nome": "",
-    "PreÃ§o Atual": "18,94",
+    "Acao": "BBAS3",
+    "PreÃ§o Atual": "3165",
+    "VariaÃ§Ã£o %": "-0,24",
+    "MÃ¡ximo do Dia": "3200",
+    "MÃ­nimo do Dia": "3130",
+    "Data/Hora": "09/11/2025 18:23:58",
+    "Risco": "BAIXO",
+    "atualizado_em": "09/11/2025 15:24:08"
+  },
+  {
+    "Acao": "ABEV3",
+    "PreÃ§o Atual": "3677,5",
+    "VariaÃ§Ã£o %": "-1,61",
+    "MÃ¡ximo do Dia": "3747,5",
+    "MÃ­nimo do Dia": "3600",
+    "Data/Hora": "09/11/2025 18:23:58",
+    "Risco": "BAIXO",
+    "atualizado_em": "09/11/2025 15:24:08"
+  },
+  {
+    "Acao": "LREN3",
+    "PreÃ§o Atual": "3830",
+    "VariaÃ§Ã£o %": "-6,81",
+    "MÃ¡ximo do Dia": "3955",
+    "MÃ­nimo do Dia": "3830",
+    "Data/Hora": "09/11/2025 18:23:58",
+    "Risco": "BAIXO",
+    "atualizado_em": "09/11/2025 15:24:08"
+  },
+  {
+    "Acao": "MGLU3",
+    "PreÃ§o Atual": "2281",
+    "VariaÃ§Ã£o %": "-2,52",
+    "MÃ¡ximo do Dia": "2357",
+    "MÃ­nimo do Dia": "2199",
+    "Data/Hora": "09/11/2025 18:23:58",
+    "Risco": "MODERADO",
+    "atualizado_em": "09/11/2025 15:24:08"
+  },
+  {
+    "Acao": "SUZB3",
+    "PreÃ§o Atual": "13240",
+    "VariaÃ§Ã£o %": "-3,85",
+    "MÃ¡ximo do Dia": "13240",
+    "MÃ­nimo do Dia": "13240",
+    "Data/Hora": "09/11/2025 18:23:58",
+    "Risco": "MODERADO",
+    "atualizado_em": "09/11/2025 15:24:08"
+  },
+  {
+    "Acao": "B3SA3",
+    "PreÃ§o Atual": "12,98",
+    "VariaÃ§Ã£o %": "-0,92",
+    "MÃ¡ximo do Dia": "13,15",
+    "MÃ­nimo do Dia": "12,93",
+    "Data/Hora": "09/11/2025 18:23:58",
+    "Risco": "BAIXO",
+    "atualizado_em": "09/11/2025 15:24:08"
+  },
+  {
+    "Acao": "GGBR4",
+    "PreÃ§o Atual": "19,03",
     "VariaÃ§Ã£o %": "0",
-    "MÃ¡ximo do Dia": "18,94",
-    "MÃ­nimo do Dia": "18,26",
-    "Data/Hora": "02/11/2025 16:49:28",
-    "atualizado_em": "02/11/2025 13:51:04"
+    "MÃ¡ximo do Dia": "19,2",
+    "MÃ­nimo do Dia": "18,81",
+    "Data/Hora": "09/11/2025 18:23:58",
+    "Risco": "BAIXO",
+    "atualizado_em": "09/11/2025 15:24:08"
   },
   {
-    "AÃ§Ã£o": "ELET3",
-    "Nome": "",
-    "PreÃ§o Atual": "55,72",
+    "Acao": "ELET3",
+    "PreÃ§o Atual": "58,68",
+    "VariaÃ§Ã£o %": "0,82",
+    "MÃ¡ximo do Dia": "58,8",
+    "MÃ­nimo do Dia": "57,13",
+    "Data/Hora": "09/11/2025 18:23:58",
+    "Risco": "BAIXO",
+    "atualizado_em": "09/11/2025 15:24:08"
+  },
+  {
+    "Acao": "KLBN11",
+    "PreÃ§o Atual": "18,27",
+    "VariaÃ§Ã£o %": "1,45",
+    "MÃ¡ximo do Dia": "18,51",
+    "MÃ­nimo do Dia": "18,25",
+    "Data/Hora": "09/11/2025 18:23:58",
+    "Risco": "BAIXO",
+    "atualizado_em": "09/11/2025 15:24:08"
+  },
+  {
+    "Acao": "EMBR3",
+    "PreÃ§o Atual": "86,3",
     "VariaÃ§Ã£o %": "0",
-    "MÃ¡ximo do Dia": "55,93",
-    "MÃ­nimo do Dia": "55,36",
-    "Data/Hora": "02/11/2025 16:49:28",
-    "atualizado_em": "02/11/2025 13:51:04"
+    "MÃ¡ximo do Dia": "87,84",
+    "MÃ­nimo do Dia": "85,52",
+    "Data/Hora": "09/11/2025 18:23:58",
+    "Risco": "MODERADO",
+    "atualizado_em": "09/11/2025 15:24:08"
   },
   {
-    "AÃ§Ã£o": "KLBN11",
-    "Nome": "",
-    "PreÃ§o Atual": "18,04",
-    "VariaÃ§Ã£o %": "0",
-    "MÃ¡ximo do Dia": "18,04",
-    "MÃ­nimo do Dia": "17,82",
-    "Data/Hora": "02/11/2025 16:49:28",
-    "atualizado_em": "02/11/2025 13:51:04"
-  },
-  {
-    "AÃ§Ã£o": "EMBR3",
-    "Nome": "",
-    "PreÃ§o Atual": "86,99",
-    "VariaÃ§Ã£o %": "-1,02",
-    "MÃ¡ximo do Dia": "88,5",
-    "MÃ­nimo do Dia": "86,44",
-    "Data/Hora": "02/11/2025 16:49:28",
-    "atualizado_em": "02/11/2025 13:51:04"
-  },
-  {
-    "AÃ§Ã£o": "AAPL",
-    "Nome": "",
-    "PreÃ§o Atual": "270,37",
-    "VariaÃ§Ã£o %": "-0,38",
-    "MÃ¡ximo do Dia": "277,32",
-    "MÃ­nimo do Dia": "269,16",
-    "Data/Hora": "02/11/2025 16:49:28",
-    "atualizado_em": "02/11/2025 13:51:04"
-  },
-  {
-    "AÃ§Ã£o": "MSFT",
-    "Nome": "",
-    "PreÃ§o Atual": "517,81",
-    "VariaÃ§Ã£o %": "-1,51",
-    "MÃ¡ximo do Dia": "529,32",
-    "MÃ­nimo do Dia": "515,1",
-    "Data/Hora": "02/11/2025 16:49:28",
-    "atualizado_em": "02/11/2025 13:51:04"
-  },
-  {
-    "AÃ§Ã£o": "TSLA",
-    "Nome": "",
-    "PreÃ§o Atual": "456,56",
-    "VariaÃ§Ã£o %": "3,74",
-    "MÃ¡ximo do Dia": "458",
-    "MÃ­nimo do Dia": "443,69",
-    "Data/Hora": "02/11/2025 16:49:28",
-    "atualizado_em": "02/11/2025 13:51:04"
-  },
-  {
-    "AÃ§Ã£o": "NVDA",
-    "Nome": "",
-    "PreÃ§o Atual": "202,49",
-    "VariaÃ§Ã£o %": "-0,16",
-    "MÃ¡ximo do Dia": "207,97",
-    "MÃ­nimo do Dia": "202,07",
-    "Data/Hora": "02/11/2025 16:49:28",
-    "atualizado_em": "02/11/2025 13:51:04"
-  },
-  {
-    "AÃ§Ã£o": "AMZN",
-    "Nome": "",
-    "PreÃ§o Atual": "244,22",
-    "VariaÃ§Ã£o %": "9,58",
-    "MÃ¡ximo do Dia": "250,5",
-    "MÃ­nimo do Dia": "243,98",
-    "Data/Hora": "02/11/2025 16:49:28",
-    "atualizado_em": "02/11/2025 13:51:04"
-  },
-  {
-    "AÃ§Ã£o": "META",
-    "Nome": "",
-    "PreÃ§o Atual": "648,35",
-    "VariaÃ§Ã£o %": "-2,72",
-    "MÃ¡ximo do Dia": "674,89",
-    "MÃ­nimo do Dia": "645,57",
-    "Data/Hora": "02/11/2025 16:49:28",
-    "atualizado_em": "02/11/2025 13:51:04"
-  },
-  {
-    "AÃ§Ã£o": "GOOG",
-    "Nome": "",
-    "PreÃ§o Atual": "281,82",
-    "VariaÃ§Ã£o %": "-0,03",
-    "MÃ¡ximo do Dia": "286,29",
-    "MÃ­nimo do Dia": "277,52",
-    "Data/Hora": "02/11/2025 16:49:28",
-    "atualizado_em": "02/11/2025 13:51:04"
-  },
-  {
-    "AÃ§Ã£o": "JPM",
-    "Nome": "",
-    "PreÃ§o Atual": "311,12",
-    "VariaÃ§Ã£o %": "0,54",
-    "MÃ¡ximo do Dia": "312,87",
-    "MÃ­nimo do Dia": "307,25",
-    "Data/Hora": "02/11/2025 16:49:28",
-    "atualizado_em": "02/11/2025 13:51:04"
-  },
-  {
-    "AÃ§Ã£o": "KO",
-    "Nome": "",
-    "PreÃ§o Atual": "68,9",
-    "VariaÃ§Ã£o %": "-0,12",
-    "MÃ¡ximo do Dia": "69,07",
-    "MÃ­nimo do Dia": "67,9",
-    "Data/Hora": "02/11/2025 16:49:28",
-    "atualizado_em": "02/11/2025 13:51:04"
-  },
-  {
-    "AÃ§Ã£o": "PEP",
-    "Nome": "",
-    "PreÃ§o Atual": "146,09",
-    "VariaÃ§Ã£o %": "-0,99",
-    "MÃ¡ximo do Dia": "147",
-    "MÃ­nimo do Dia": "145,3",
-    "Data/Hora": "02/11/2025 16:49:28",
-    "atualizado_em": "02/11/2025 13:51:04"
-  },
-  {
-    "AÃ§Ã£o": "DIS",
-    "Nome": "",
-    "PreÃ§o Atual": "112,62",
-    "VariaÃ§Ã£o %": "0,7",
-    "MÃ¡ximo do Dia": "113,1",
-    "MÃ­nimo do Dia": "110,53",
-    "Data/Hora": "02/11/2025 16:49:28",
-    "atualizado_em": "02/11/2025 13:51:04"
-  },
-  {
-    "AÃ§Ã£o": "NFLX",
-    "Nome": "",
-    "PreÃ§o Atual": "1118,86",
-    "VariaÃ§Ã£o %": "2,74",
-    "MÃ¡ximo do Dia": "1134,88",
-    "MÃ­nimo do Dia": "1101,98",
-    "Data/Hora": "02/11/2025 16:49:28",
-    "atualizado_em": "02/11/2025 13:51:04"
-  },
-  {
-    "AÃ§Ã£o": "NKE",
-    "Nome": "",
-    "PreÃ§o Atual": "64,59",
+    "Acao": "AAPL",
+    "PreÃ§o Atual": "268,47",
     "VariaÃ§Ã£o %": "-0,48",
-    "MÃ¡ximo do Dia": "65,25",
-    "MÃ­nimo do Dia": "64,25",
-    "Data/Hora": "02/11/2025 16:49:28",
-    "atualizado_em": "02/11/2025 13:51:04"
+    "MÃ¡ximo do Dia": "272,29",
+    "MÃ­nimo do Dia": "266,77",
+    "Data/Hora": "09/11/2025 18:23:58",
+    "Risco": "ALTO",
+    "atualizado_em": "09/11/2025 15:24:08"
   },
   {
-    "AÃ§Ã£o": "XOM",
-    "Nome": "",
-    "PreÃ§o Atual": "114,36",
-    "VariaÃ§Ã£o %": "-0,29",
-    "MÃ¡ximo do Dia": "115,23",
-    "MÃ­nimo do Dia": "112,62",
-    "Data/Hora": "02/11/2025 16:49:28",
-    "atualizado_em": "02/11/2025 13:51:04"
+    "Acao": "MSFT",
+    "PreÃ§o Atual": "496,82",
+    "VariaÃ§Ã£o %": "-0,06",
+    "MÃ¡ximo do Dia": "499,38",
+    "MÃ­nimo do Dia": "493,25",
+    "Data/Hora": "09/11/2025 18:23:58",
+    "Risco": "ALTO",
+    "atualizado_em": "09/11/2025 15:24:08"
   },
   {
-    "AÃ§Ã£o": "PFE",
-    "Nome": "",
-    "PreÃ§o Atual": "24,65",
-    "VariaÃ§Ã£o %": "1,48",
-    "MÃ¡ximo do Dia": "24,73",
-    "MÃ­nimo do Dia": "24,16",
-    "Data/Hora": "02/11/2025 16:49:28",
-    "atualizado_em": "02/11/2025 13:51:04"
+    "Acao": "TSLA",
+    "PreÃ§o Atual": "429,52",
+    "VariaÃ§Ã£o %": "-3,68",
+    "MÃ¡ximo do Dia": "439,36",
+    "MÃ­nimo do Dia": "421,88",
+    "Data/Hora": "09/11/2025 18:23:58",
+    "Risco": "ALTO",
+    "atualizado_em": "09/11/2025 15:24:08"
+  },
+  {
+    "Acao": "NVDA",
+    "PreÃ§o Atual": "188,15",
+    "VariaÃ§Ã£o %": "0,04",
+    "MÃ¡ximo do Dia": "188,32",
+    "MÃ­nimo do Dia": "178,91",
+    "Data/Hora": "09/11/2025 18:23:58",
+    "Risco": "ALTO",
+    "atualizado_em": "09/11/2025 15:24:08"
+  },
+  {
+    "Acao": "AMZN",
+    "PreÃ§o Atual": "244,41",
+    "VariaÃ§Ã£o %": "0,56",
+    "MÃ¡ximo do Dia": "244,9",
+    "MÃ­nimo do Dia": "238,49",
+    "Data/Hora": "09/11/2025 18:23:58",
+    "Risco": "ALTO",
+    "atualizado_em": "09/11/2025 15:24:08"
+  },
+  {
+    "Acao": "META",
+    "PreÃ§o Atual": "621,71",
+    "VariaÃ§Ã£o %": "0,45",
+    "MÃ¡ximo do Dia": "622,13",
+    "MÃ­nimo do Dia": "601,2",
+    "Data/Hora": "09/11/2025 18:23:58",
+    "Risco": "ALTO",
+    "atualizado_em": "09/11/2025 15:24:08"
+  },
+  {
+    "Acao": "GOOG",
+    "PreÃ§o Atual": "279,7",
+    "VariaÃ§Ã£o %": "-1,98",
+    "MÃ¡ximo do Dia": "284,5",
+    "MÃ­nimo do Dia": "275,74",
+    "Data/Hora": "09/11/2025 18:23:58",
+    "Risco": "ALTO",
+    "atualizado_em": "09/11/2025 15:24:08"
+  },
+  {
+    "Acao": "JPM",
+    "PreÃ§o Atual": "314,21",
+    "VariaÃ§Ã£o %": "0,25",
+    "MÃ¡ximo do Dia": "314,43",
+    "MÃ­nimo do Dia": "307,64",
+    "Data/Hora": "09/11/2025 18:23:58",
+    "Risco": "MODERADO",
+    "atualizado_em": "09/11/2025 15:24:08"
+  },
+  {
+    "Acao": "KO",
+    "PreÃ§o Atual": "70,55",
+    "VariaÃ§Ã£o %": "2,16",
+    "MÃ¡ximo do Dia": "70,87",
+    "MÃ­nimo do Dia": "69,41",
+    "Data/Hora": "09/11/2025 18:23:58",
+    "Risco": "MODERADO",
+    "atualizado_em": "09/11/2025 15:24:08"
+  },
+  {
+    "Acao": "PEP",
+    "PreÃ§o Atual": "142,95",
+    "VariaÃ§Ã£o %": "0,97",
+    "MÃ¡ximo do Dia": "144,05",
+    "MÃ­nimo do Dia": "141,65",
+    "Data/Hora": "09/11/2025 18:23:58",
+    "Risco": "MODERADO",
+    "atualizado_em": "09/11/2025 15:24:08"
+  },
+  {
+    "Acao": "DIS",
+    "PreÃ§o Atual": "110,74",
+    "VariaÃ§Ã£o %": "0,23",
+    "MÃ¡ximo do Dia": "111,43",
+    "MÃ­nimo do Dia": "110,04",
+    "Data/Hora": "09/11/2025 18:23:58",
+    "Risco": "MODERADO",
+    "atualizado_em": "09/11/2025 15:24:08"
+  },
+  {
+    "Acao": "NFLX",
+    "PreÃ§o Atual": "1103,66",
+    "VariaÃ§Ã£o %": "0,61",
+    "MÃ¡ximo do Dia": "1108,22",
+    "MÃ­nimo do Dia": "1087,5",
+    "Data/Hora": "09/11/2025 18:23:58",
+    "Risco": "ALTO",
+    "atualizado_em": "09/11/2025 15:24:08"
+  },
+  {
+    "Acao": "NKE",
+    "PreÃ§o Atual": "61,09",
+    "VariaÃ§Ã£o %": "-1,29",
+    "MÃ¡ximo do Dia": "62,18",
+    "MÃ­nimo do Dia": "60,29",
+    "Data/Hora": "09/11/2025 18:23:58",
+    "Risco": "MODERADO",
+    "atualizado_em": "09/11/2025 15:24:08"
+  },
+  {
+    "Acao": "XOM",
+    "PreÃ§o Atual": "117,22",
+    "VariaÃ§Ã£o %": "2,36",
+    "MÃ¡ximo do Dia": "117,51",
+    "MÃ­nimo do Dia": "114,9",
+    "Data/Hora": "09/11/2025 18:23:58",
+    "Risco": "MODERADO",
+    "atualizado_em": "09/11/2025 15:24:08"
+  },
+  {
+    "Acao": "PFE",
+    "PreÃ§o Atual": "24,43",
+    "VariaÃ§Ã£o %": "0,04",
+    "MÃ¡ximo do Dia": "24,63",
+    "MÃ­nimo do Dia": "24,11",
+    "Data/Hora": "09/11/2025 18:23:58",
+    "Risco": "MODERADO",
+    "atualizado_em": "09/11/2025 15:24:08"
   }
 ]

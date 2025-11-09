@@ -97,6 +97,8 @@ public class CotacaoStreamingService {
      * Força atualização imediata das cotações
      */
     public void forcarAtualizacao() {
+        // Força recarregamento do cache do GoogleSheetsService
+        googleSheetsService.forcarRecarregamento();
         atualizarEEnviarCotacoes();
     }
 }
