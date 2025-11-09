@@ -1,0 +1,47 @@
+name: Testes Automatizados
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    strategy:
+      matrix:
+        java-version: [21]
+    
+    steps:
+    - name: Checkout código
+      uses: actions/checkout@v3
+    
+    - name: Configurar Java ${{ matrix.java-version }}
+      uses: actions/setup-java@v3
+      with:
+        java-version: ${{ matrix.java-version }}
+        distribution: 'temurin'
+        cache: maven
+    
+    - name: Executar testes unitários
+      run: mvn test -Dtest="*Test" -DfailIfNoTests=false
+    
+    - name: Executar testes de integração
+      run: mvn test -Dtest="*IntegrationTest" -DfailIfNoTests=false
+    
+    - name: Executar testes funcionais
+      run: mvn test -Dtest="*Functional*" -DfailIfNoTests=false
+    
+    - name: Gerar relatório de cobertura
+      run: mvn jacoco:report
+    
+    - name: Publicar relatório de cobertura
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./target/site/jacoco/jacoco.xml
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+
