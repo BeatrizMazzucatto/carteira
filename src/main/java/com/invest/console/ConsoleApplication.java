@@ -1234,7 +1234,7 @@ public class ConsoleApplication implements CommandLineRunner {
         System.out.println("═════════════════");
         System.out.println();
         System.out.println("1. Alterar Senha");
-        System.out.println("2. Alterar Nome");
+        System.out.println("2. Dados Pessoais");
         System.out.println("3. Voltar");
         System.out.println();
         System.out.print("Opção: ");
@@ -1247,7 +1247,7 @@ public class ConsoleApplication implements CommandLineRunner {
                 alterarSenha();
                 break;
             case 2:
-                alterarNome();
+                verDadosPessoaisEValorInvestido();
                 break;
             case 3:
                 return;
@@ -1308,24 +1308,120 @@ public class ConsoleApplication implements CommandLineRunner {
     }
 
     /**
-     * Altera nome do investidor
+     * Mostra dados pessoais do investidor e valor total investido
      */
-    private void alterarNome() {
-        System.out.print("Novo nome: ");
-        String novoNome = scanner.nextLine().trim();
-
-        if (novoNome.isEmpty()) {
-            System.out.println("Nome não pode ser vazio!");
-            return;
-        }
-
+    private void verDadosPessoaisEValorInvestido() {
+        System.out.println(" DADOS PESSOAIS E VALOR TOTAL INVESTIDO");
+        System.out.println("═══════════════════════════════════════════════════════════════");
+        System.out.println();
+        
         try {
-            investidorLogado.setNome(novoNome);
-            investidorService.updateInvestidor(investidorLogado.getId(), investidorLogado);
-            System.out.println("Nome alterado com sucesso!");
+            // Recarrega o investidor do banco para garantir dados atualizados
+            investidorLogado = investidorService.getInvestidorById(investidorLogado.getId());
+            
+            // Exibe dados pessoais
+            System.out.println("DADOS PESSOAIS:");
+            System.out.println("───────────────────────────────────────────────────────────");
+            System.out.println("Nome: " + investidorLogado.getNome());
+            System.out.println("Email: " + investidorLogado.getEmail());
+            System.out.println("ID: " + investidorLogado.getId());
+            
+            DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm:ss");
+            if (investidorLogado.getDataCriacao() != null) {
+                System.out.println("Data de Criação: " + investidorLogado.getDataCriacao().format(formatter));
+            }
+            if (investidorLogado.getDataAtualizacao() != null) {
+                System.out.println("Última Atualização: " + investidorLogado.getDataAtualizacao().format(formatter));
+            }
+            
+            System.out.println();
+            
+            // Calcula valor total investido em todas as carteiras
+            List<Carteira> carteiras = carteiraService.getCarteirasByInvestidor(investidorLogado.getId());
+            BigDecimal valorTotalInvestido = BigDecimal.ZERO;
+            BigDecimal valorAtualMercado = BigDecimal.ZERO;
+            int totalCarteiras = carteiras.size();
+            
+            System.out.println("INVESTIMENTOS:");
+            System.out.println("───────────────────────────────────────────────────────────");
+            System.out.println("Total de Carteiras: " + totalCarteiras);
+            System.out.println();
+            
+            if (carteiras.isEmpty()) {
+                System.out.println("Nenhuma carteira cadastrada ainda.");
+            } else {
+                System.out.println("Resumo por Carteira:");
+                System.out.println();
+                
+                for (Carteira carteira : carteiras) {
+                    try {
+                        com.invest.dto.CarteiraRentabilidadeResponse rentabilidade = 
+                            rentabilidadeService.calcularRentabilidadeCarteira(carteira.getId());
+                        
+                        BigDecimal valorInvestidoCarteira = rentabilidade.getValorTotalInvestido() != null 
+                            ? rentabilidade.getValorTotalInvestido() 
+                            : BigDecimal.ZERO;
+                        BigDecimal valorMercadoCarteira = rentabilidade.getValorAtualMercado() != null 
+                            ? rentabilidade.getValorAtualMercado() 
+                            : BigDecimal.ZERO;
+                        
+                        valorTotalInvestido = valorTotalInvestido.add(valorInvestidoCarteira);
+                        valorAtualMercado = valorAtualMercado.add(valorMercadoCarteira);
+                        
+                        System.out.println("  • " + carteira.getNome() + ":");
+                        
+                        // Busca e exibe os nomes das ações
+                        List<com.invest.model.Ativo> ativos = ativoRepository.findByCarteira(carteira);
+                        if (ativos != null && !ativos.isEmpty()) {
+                            System.out.print("    Ações: ");
+                            List<String> nomesAcoes = new ArrayList<>();
+                            for (com.invest.model.Ativo ativo : ativos) {
+                                if (ativo.getNome() != null && !ativo.getNome().trim().isEmpty()) {
+                                    nomesAcoes.add(ativo.getNome());
+                                }
+                            }
+                            if (!nomesAcoes.isEmpty()) {
+                                System.out.println(String.join(", ", nomesAcoes));
+                            } else {
+                                System.out.println("Nenhuma ação cadastrada");
+                            }
+                        } else {
+                            System.out.println("    Ações: Nenhuma ação cadastrada");
+                        }
+                        
+                        System.out.println("    Valor Investido: R$ " + formatarValor(valorInvestidoCarteira));
+                        System.out.println("    Valor Atual: R$ " + formatarValor(valorMercadoCarteira));
+                        System.out.println();
+                    } catch (Exception e) {
+                        System.out.println("  • " + carteira.getNome() + ": Erro ao calcular rentabilidade");
+                        System.out.println();
+                    }
+                }
+                
+                System.out.println("TOTAL GERAL:");
+                System.out.println("───────────────────────────────────────────────────────────");
+                System.out.println("Valor Total Investido: R$ " + formatarValor(valorTotalInvestido));
+                System.out.println("Valor Atual no Mercado: R$ " + formatarValor(valorAtualMercado));
+                
+                if (valorTotalInvestido.compareTo(BigDecimal.ZERO) > 0) {
+                    BigDecimal rentabilidadeTotal = valorAtualMercado.subtract(valorTotalInvestido);
+                    BigDecimal percentualRentabilidade = rentabilidadeTotal
+                        .divide(valorTotalInvestido, 4, java.math.RoundingMode.HALF_UP)
+                        .multiply(new BigDecimal("100"));
+                    
+                    System.out.println("Rentabilidade: R$ " + formatarValor(rentabilidadeTotal) + 
+                                     " (" + formatarValor(percentualRentabilidade) + "%)");
+                }
+            }
+            
         } catch (Exception e) {
-            System.out.println("Erro ao alterar nome: " + e.getMessage());
+            System.out.println("Erro ao buscar dados: " + e.getMessage());
+            e.printStackTrace();
         }
+        
+        System.out.println();
+        System.out.println("Pressione Enter para continuar...");
+        scanner.nextLine();
         System.out.println();
     }
 
